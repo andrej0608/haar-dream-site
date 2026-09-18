@@ -44,7 +44,7 @@ export function ContactSection() {
   const onSubmit = (_values: FormValues) => {
     // Demo-website: er wordt niets verstuurd of opgeslagen.
     toast.success("Bedankt! We nemen zo snel mogelijk contact met je op.");
-    reset({ naam: "", email: "", bericht: "", privacy: undefined });
+    reset({ naam: "", email: "", bericht: "" });
   };
 
   return (

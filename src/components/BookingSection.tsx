@@ -48,7 +48,7 @@ const openingWindows: Record<number, { start: string; end: string } | null> = {
 };
 
 const toMinutes = (time: string) => {
-  const [h, m] = time.split(":").map(Number);
+  const [h = 0, m = 0] = time.split(":").map(Number);
   return h * 60 + m;
 };
 
@@ -118,7 +118,7 @@ export function BookingSection() {
     setDate(undefined);
     setTime(null);
     setDetails(null);
-    form.reset({ voornaam: "", achternaam: "", email: "", telefoon: "", opmerking: "", privacy: undefined });
+    form.reset({ voornaam: "", achternaam: "", email: "", telefoon: "", opmerking: "" });
   };
 
   const handleNext = () => {
@@ -307,7 +307,7 @@ export function BookingSection() {
   );
 }
 
-function SummaryRow({ label, value }: { label: string; value?: string }) {
+function SummaryRow({ label, value }: { label: string; value?: string | undefined }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 last:border-0 last:pb-0">
       <dt className="text-muted-foreground">{label}</dt>
