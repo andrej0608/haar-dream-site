@@ -1,24 +1,47 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { AboutSection } from "@/components/AboutSection";
+import { BookingSection } from "@/components/BookingSection";
+import { ContactSection } from "@/components/ContactSection";
+import { Footer } from "@/components/Footer";
+import { GallerySection } from "@/components/GallerySection";
+import { Hero } from "@/components/Hero";
+import { Navbar } from "@/components/Navbar";
+import { ReviewsSection } from "@/components/ReviewsSection";
+import { ServicesSection } from "@/components/ServicesSection";
+
+const title = "Premium Hair Studio — Haarsalon in België";
+const description =
+  "Premium Hair Studio: knippen, kleuren, balayage en bruidskapsels met persoonlijk advies. Boek eenvoudig je afspraak online. Demo-website.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <ServicesSection />
+        <AboutSection />
+        <GallerySection />
+        <ReviewsSection />
+        <BookingSection />
+        <ContactSection />
+      </main>
+      <Footer />
+    </>
   );
 }
