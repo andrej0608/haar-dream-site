@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { nlBE } from "date-fns/locale";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -436,6 +437,7 @@ function DateStep({
             selected={date}
             onSelect={onDateChange}
             disabled={(day) => day < startOfToday() || isClosedDay(day)}
+            locale={nlBE}
             weekStartsOn={1}
             className="bg-transparent"
           />
