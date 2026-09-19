@@ -6,6 +6,7 @@ import glossy from "@/assets/gallery-glossy.jpg";
 import updo from "@/assets/gallery-updo.jpg";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
+import { useLanguage } from "@/lib/i18n";
 
 const images = [
   { src: balayage, alt: "Lang blond haar met zachte balayage, van achteren gezien" },
@@ -17,25 +18,26 @@ const images = [
 ];
 
 export function GallerySection() {
+  const { content: c } = useLanguage();
   return (
     <section id="galerij" className="border-t border-border py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Galerij"
-          title="Werk uit de studio"
-          subtitle="Een selectie van kleuringen, coupes en kapsels die we in de studio maakten."
+          eyebrow={c.gallery.eyebrow}
+          title={c.gallery.title}
+          subtitle={c.gallery.subtitle}
         />
 
         <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {images.map((image, index) => (
-            <Reveal as="li" key={image.alt} delay={index * 60}>
+            <Reveal as="li" key={image.src} delay={index * 60}>
               <div className="overflow-hidden rounded-md border border-border">
                 <img
                   src={image.src}
                   width={1024}
                   height={1280}
                   loading="lazy"
-                  alt={image.alt}
+                  alt={c.gallery.alts[index]}
                   className="aspect-4/5 w-full object-cover transition-transform duration-700 hover:scale-105"
                 />
               </div>
