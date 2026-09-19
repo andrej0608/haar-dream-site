@@ -10,7 +10,6 @@ Build a modern, premium single-page website for a hair salon in Belgium. It is a
 - React + Vite + TypeScript + Tailwind. ONE page with smooth-scroll anchor navigation. No router, no extra pages.
 - NO backend: no Supabase, no auth, no database, no booking system, no external APIs.
 - All images must be generated/saved as LOCAL files in src/assets and imported in components. Do not hotlink Unsplash or any external image URL.
-- Do not add any Lovable badge, watermark or "Edit with Lovable" element.
 - Fully responsive, mobile-first, tested at 375px, 768px and 1440px. Semantic HTML, alt texts in Dutch, visible focus states, good contrast.
 - Set <html lang="nl"> and write a proper Dutch <title> and meta description.
 
@@ -44,23 +43,17 @@ add a VISUAL-ONLY online booking flow. It must look and feel like a real booking
 
 dont offer me supabase, email notification, or connect backend, it is supopsed to be mock
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/9ba24907-6c06-4266-8cf5-0e58f4bf1789).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requires [Bun](https://bun.sh).
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install
+bun run dev      # dev server
+bun run build    # production build
+bun run preview  # preview the production build
 ```
+
+## Deployment
+
+Deployed on Vercel as a TanStack Start (SSR) app.

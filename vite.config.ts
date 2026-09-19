@@ -12,4 +12,7 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Deployment target. Defaults to Vercel; override with NITRO_PRESET (e.g.
+  // NITRO_PRESET=node) to build something `vite preview` can serve locally.
+  nitro: { preset: process.env["NITRO_PRESET"] ?? "vercel" },
 });

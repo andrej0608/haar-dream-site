@@ -79,11 +79,16 @@ export function ContactSection() {
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                <span className="not-italic text-muted-foreground">
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="not-italic text-muted-foreground"
+                >
                   {site.address.street}
                   <br />
                   {site.address.city}, {site.address.country}
-                </span>
+                </a>
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
@@ -106,7 +111,7 @@ export function ContactSection() {
               <div className="flex items-end justify-between gap-4">
                 <h3 className="font-display text-2xl text-foreground">{c.contact.mapTitle}</h3>
                 <Button asChild variant="outline" size="sm">
-                  <a href={directionsUrl} target="_blank" rel="noreferrer">
+                  <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
                     {c.contact.directions}
                     <ExternalLink aria-hidden="true" />
                   </a>
