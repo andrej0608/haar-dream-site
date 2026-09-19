@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
-import { formattedPrice, services } from "@/config/site";
+import { services } from "@/config/site";
 import { useLanguage } from "@/lib/i18n";
 
 export function ServicesSection() {

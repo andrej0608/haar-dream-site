@@ -2,7 +2,6 @@ import { Star } from "lucide-react";
 
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
-import { reviews } from "@/config/site";
 import { useLanguage } from "@/lib/i18n";
 
 export function ReviewsSection() {

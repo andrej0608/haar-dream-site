@@ -40,7 +40,7 @@ export const openingHours: OpeningHour[] = [
 ];
 
 export type Service = {
-  id: string;
+  id: "knippen" | "kleuren" | "balayage" | "keratine" | "bruid" | "heren";
   name: string;
   description: string;
   /** Vanaf-prijs in euro */
