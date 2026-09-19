@@ -21,8 +21,8 @@ const errorText = "text-xs text-destructive";
 export function ContactSection() {
   const { content: c } = useLanguage();
   const destinationAddress = `${site.address.street}, ${site.address.city}, ${site.address.country}`;
-  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(destinationAddress)}&z=15&output=embed`;
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationAddress)}`;
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(destinationAddress)}&z=16&hl=nl&output=embed`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destinationAddress)}&hl=nl`;
   const schema = z.object({
     naam: z.string().min(2, c.contact.errors.name),
     email: z.string().min(1, c.contact.errors.emailRequired).email(c.contact.errors.emailInvalid),
