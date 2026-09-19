@@ -8,9 +8,10 @@ export const site = {
   phone: "+32 400 00 00 00",
   email: "info@example.com",
   address: {
-    street: "Voorbeeldstraat 12",
-    city: "1000 Voorbeeldstad",
+    street: "Grote Markt 1",
+    city: "1000 Brussel",
     country: "België",
+    mapQuery: "Grand-Place 1, 1000 Bruxelles, Belgium",
   },
   socials: {
     instagram: "#",

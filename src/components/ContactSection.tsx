@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,6 +20,11 @@ const errorText = "text-xs text-destructive";
 
 export function ContactSection() {
   const { content: c } = useLanguage();
+  const mapKey = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY"];
+  const mapUrl = mapKey
+    ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(mapKey)}&q=${encodeURIComponent(site.address.mapQuery)}&zoom=15`
+    : null;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address.mapQuery)}`;
   const schema = z.object({
     naam: z.string().min(2, c.contact.errors.name),
     email: z.string().min(1, c.contact.errors.emailRequired).email(c.contact.errors.emailInvalid),
@@ -98,6 +103,34 @@ export function ContactSection() {
             <p className="mt-6 text-xs text-muted-foreground">
               {c.contact.demo}
             </p>
+
+            <div className="mt-10">
+              <div className="flex items-end justify-between gap-4">
+                <h3 className="font-display text-2xl text-foreground">{c.contact.mapTitle}</h3>
+                <Button asChild variant="outline" size="sm">
+                  <a href={directionsUrl} target="_blank" rel="noreferrer">
+                    {c.contact.directions}
+                    <ExternalLink aria-hidden="true" />
+                  </a>
+                </Button>
+              </div>
+              <div className="mt-5 aspect-[4/3] overflow-hidden rounded-md border border-border bg-surface">
+                {mapUrl ? (
+                  <iframe
+                    title={c.contact.mapAria}
+                    src={mapUrl}
+                    className="h-full w-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center p-8 text-center text-sm text-muted-foreground">
+                    {site.address.street}, {site.address.city}
+                  </div>
+                )}
+              </div>
+            </div>
           </Reveal>
 
           <Reveal delay={80}>
