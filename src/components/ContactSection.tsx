@@ -59,12 +59,12 @@ export function ContactSection() {
           <Reveal>
             <h3 className="font-display text-2xl text-foreground">{c.contact.hours}</h3>
             <ul className="mt-5 border-t border-border">
-              {openingHours.map((entry) => (
+              {openingHours.map((entry, index) => (
                 <li
                   key={entry.day}
                   className="flex items-center justify-between border-b border-border py-3 text-sm"
                 >
-                  <span className="text-foreground">{c.contact.days[indexOfHour(entry.day)]}</span>
+                  <span className="text-foreground">{c.contact.days[index]}</span>
                   <span className={entry.closed ? "text-muted-foreground" : "text-foreground"}>
                     {entry.closed ? c.contact.closed : entry.hours}
                   </span>
