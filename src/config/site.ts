@@ -1,125 +1,67 @@
-/**
- * Eén centrale plek voor alle bedrijfsgegevens.
- * DEMO-site: alle contactgegevens zijn placeholders.
- */
 export const site = {
-  name: "Premium Hair Studio",
-  tagline: "Jouw haar. Jouw stijl.",
+  name: "Premium Brasserie",
+  tagline: "Belgische klassiekers, met het seizoen mee.",
   phone: "+32 400 00 00 00",
   email: "info@example.com",
   address: {
     street: "Grote Markt 1",
-    city: "1000 Brussel",
+    postalCode: "3500",
+    city: "Hasselt",
     country: "België",
   },
-  socials: {
-    instagram: "#",
-    facebook: "#",
-  },
+  socials: { instagram: "#", facebook: "#" },
 } as const;
 
-export type OpeningHour = {
-  /** Volledige dagnaam */
-  day: string;
-  /** Korte label zoals in de navigatie */
-  short: string;
-  hours: string;
-  closed: boolean;
-  /** 0 = zondag ... 6 = zaterdag */
-  weekday: number;
-};
-
-export const openingHours: OpeningHour[] = [
-  { day: "Maandag", short: "ma", hours: "Gesloten", closed: true, weekday: 1 },
-  { day: "Dinsdag", short: "di", hours: "09:00 – 18:00", closed: false, weekday: 2 },
-  { day: "Woensdag", short: "wo", hours: "09:00 – 18:00", closed: false, weekday: 3 },
-  { day: "Donderdag", short: "do", hours: "09:00 – 18:00", closed: false, weekday: 4 },
-  { day: "Vrijdag", short: "vr", hours: "09:00 – 18:00", closed: false, weekday: 5 },
-  { day: "Zaterdag", short: "za", hours: "08:30 – 16:00", closed: false, weekday: 6 },
-  { day: "Zondag", short: "zo", hours: "Gesloten", closed: true, weekday: 0 },
-];
-
-export type Service = {
-  id: "knippen" | "kleuren" | "balayage" | "keratine" | "bruid" | "heren";
-  name: string;
-  description: string;
-  /** Vanaf-prijs in euro */
-  price: number;
-  /** Duur in minuten */
-  duration: number;
-};
-
-export const services: Service[] = [
-  {
-    id: "knippen",
-    name: "Knippen & stylen",
-    description: "Een frisse coupe op maat van je haarstructuur, met styling erbij.",
-    price: 45,
-    duration: 45,
-  },
-  {
-    id: "kleuren",
-    name: "Kleuren",
-    description: "Warme of koele tinten, uitgroei bijwerken of een volledig nieuwe kleur.",
-    price: 65,
-    duration: 90,
-  },
-  {
-    id: "balayage",
-    name: "Balayage & highlights",
-    description: "Zachte overgangen en natuurlijke lichtjes, met de hand geplaatst.",
-    price: 120,
-    duration: 180,
-  },
-  {
-    id: "keratine",
-    name: "Keratinebehandeling",
-    description: "Minder pluis, meer glans en makkelijker stylen, weken aan een stuk.",
-    price: 150,
-    duration: 150,
-  },
-  {
-    id: "bruid",
-    name: "Bruidskapsels & opsteekkapsels",
-    description: "Een kapsel dat de hele dag blijft zitten, proefsessie inbegrepen.",
-    price: 80,
-    duration: 90,
-  },
-  {
-    id: "heren",
-    name: "Herenknipbeurt",
-    description: "Scherpe lijnen, nette overgangen en advies over dagelijkse styling.",
-    price: 30,
-    duration: 30,
-  },
-];
-
-export const stylists = ["Geen voorkeur", "Sophie", "Lotte", "Jonas"] as const;
+export const openingHours = [
+  { day: "Maandag", hours: "Gesloten", closed: true },
+  { day: "Dinsdag", hours: "Gesloten", closed: true },
+  { day: "Woensdag", hours: "12:00–14:00 · 18:00–21:30", closed: false },
+  { day: "Donderdag", hours: "12:00–14:00 · 18:00–21:30", closed: false },
+  { day: "Vrijdag", hours: "12:00–14:00 · 18:00–22:00", closed: false },
+  { day: "Zaterdag", hours: "12:00–14:00 · 18:00–22:00", closed: false },
+  { day: "Zondag", hours: "12:00–15:00", closed: false },
+] as const;
 
 export const navLinks = [
-  { label: "Diensten", href: "#diensten" },
+  { label: "Menu", href: "#menu" },
   { label: "Over ons", href: "#over-ons" },
   { label: "Galerij", href: "#galerij" },
   { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
+export const menu = {
+  Voorgerechten: [
+    { name: "Garnaalkroketten", description: "Noordzeegarnaal, gebakken peterselie en citroen", price: 18 },
+    { name: "Carpaccio van rund", description: "Parmezaan, rucola en pijnpitten", price: 17 },
+    { name: "Seizoenssoep", description: "Dagverse soep met huisgebakken brood", price: 9 },
+    { name: "Burrata", description: "Met tomaat, basilicum en olijfolie", price: 15 },
+  ],
+  Hoofdgerechten: [
+    { name: "Steak van Belgisch witblauw", description: "Met frietjes, sla en pepersaus", price: 32 },
+    { name: "Zeetong meunière", description: "Botersaus, gekookte aardappelen en seizoensgroenten", price: 38 },
+    { name: "Mosselen in witte wijn", description: "Met frietjes", price: 26 },
+    { name: "Risotto met paddenstoelen", description: "Parmezaan en tuinkruiden", price: 22 },
+  ],
+  Desserts: [
+    { name: "Dame blanche", description: "Vanille-ijs, warme chocoladesaus en slagroom", price: 10 },
+    { name: "Crème brûlée", description: "Vanille en gekarameliseerde suiker", price: 9 },
+    { name: "Luikse wafel", description: "Met vers fruit", price: 10 },
+    { name: "Belgisch kaasplankje", description: "Selectie van drie kazen", price: 14 },
+  ],
+} as const;
+
+export type MenuCategory = keyof typeof menu;
+
 export const reviews = [
-  {
-    name: "Elke V.",
-    service: "Balayage & highlights",
-    text: "Eindelijk een salon waar echt naar je geluisterd wordt. Mijn balayage ziet er na twee maanden nog steeds prachtig uit.",
-  },
-  {
-    name: "Nathalie D.",
-    service: "Knippen & stylen",
-    text: "Rustige sfeer, alle tijd voor uitleg en een coupe die ik thuis zelf makkelijk goed krijg. Ik kom zeker terug.",
-  },
-  {
-    name: "Thomas B.",
-    service: "Herenknipbeurt",
-    text: "Kort, correct en altijd op tijd. Jonas weet precies wat ik bedoel, ook als ik het zelf niet goed kan uitleggen.",
-  },
+  { name: "Sofie V.", context: "Diner voor twee", text: "Heerlijke klassiekers met een fijne, moderne toets. De bediening gaf ons alle tijd." },
+  { name: "Bram D.", context: "Avond met vrienden", text: "Warme sfeer, perfecte steak en een wijnadvies dat echt bij onze gerechten paste." },
+  { name: "Anke M.", context: "Zondagslunch", text: "Gezellig zonder stijf te zijn. De seizoensgerechten waren vers en mooi in balans." },
 ] as const;
 
-export const formattedPrice = (price: number) => `vanaf €${price}`;
+export const occasions = [
+  "Geen bijzondere gelegenheid",
+  "Verjaardag",
+  "Zakelijk diner",
+  "Romantisch diner",
+] as const;

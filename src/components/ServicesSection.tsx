@@ -1,38 +1,26 @@
+import { useState } from "react";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
-import { services } from "@/config/site";
-import { useLanguage } from "@/lib/i18n";
+import { menu, type MenuCategory } from "@/config/site";
+import { cn } from "@/lib/utils";
+
+const categories = Object.keys(menu) as MenuCategory[];
 
 export function ServicesSection() {
-  const { content: c } = useLanguage();
+  const [active, setActive] = useState<MenuCategory>("Voorgerechten");
   return (
-    <section id="diensten" className="border-t border-border py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <SectionHeading
-          eyebrow={c.services.eyebrow}
-          title={c.services.title}
-          subtitle={c.services.subtitle}
-        />
-
-        <ul className="mt-14 grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, index) => (
-            <Reveal as="li" key={service.id} delay={index * 60} className="bg-card">
-              <article className="flex h-full flex-col gap-3 p-8">
-                <h3 className="font-display text-2xl text-foreground">{c.services.items[service.id][0]}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {c.services.items[service.id][1]}
-                </p>
-                <p className="mt-auto pt-4 text-sm font-medium text-primary">
-                  {c.services.from} €{service.price}
-                </p>
-              </article>
-            </Reveal>
-          ))}
-        </ul>
-
-        <p className="mt-8 text-sm text-muted-foreground">
-          {c.services.note}
-        </p>
+    <section id="menu" className="border-t border-border py-24 sm:py-32">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <SectionHeading eyebrow="Menu" title="Onze kaart" subtitle="Een greep uit onze kaart. De gerechten wisselen met de seizoenen." />
+        <Reveal className="mt-12">
+          <div role="tablist" aria-label="Menucategorieën" className="flex overflow-x-auto border-b border-border">
+            {categories.map((category) => <button key={category} type="button" role="tab" aria-selected={active === category} onClick={() => setActive(category)} className={cn("shrink-0 border-b-2 px-5 py-4 text-sm font-semibold transition-colors", active === category ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground")}>{category}</button>)}
+          </div>
+          <ul className="divide-y divide-border border-b border-border">
+            {menu[active].map((dish) => <li key={dish.name} className="grid grid-cols-[1fr_auto] gap-5 py-6"><div><h3 className="font-display text-xl text-foreground sm:text-2xl">{dish.name}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{dish.description}</p></div><p className="pt-1 text-sm font-semibold text-primary">€{dish.price}</p></li>)}
+          </ul>
+          <p className="mt-6 text-xs text-muted-foreground">Gerechten en prijzen zijn voorbeelden.</p>
+        </Reveal>
       </div>
     </section>
   );

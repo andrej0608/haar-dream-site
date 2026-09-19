@@ -11,7 +11,6 @@ import type { ReactNode } from "react";
 
 import { Toaster } from "../components/ui/sonner";
 import appCss from "../styles.css?url";
-import { LanguageProvider } from "../lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -75,11 +74,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Premium Hair Studio — Haarsalon in België" },
+      { title: "Premium Brasserie — Moderne Belgische keuken in Hasselt" },
       {
         name: "description",
         content:
-          "Premium Hair Studio: knippen, kleuren, balayage en bruidskapsels met persoonlijk advies. Demo-website.",
+          "Premium Brasserie is een demo van een moderne Belgische brasserie met lokale, seizoensgebonden gerechten in Hasselt.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -93,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Manrope:wght@400;500;600;700&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -123,10 +122,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <Outlet />
-        <Toaster position="top-center" />
-      </LanguageProvider>
+      <Outlet />
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }

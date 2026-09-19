@@ -2,21 +2,14 @@
 @source "../src";
 @import "tw-animate-css";
 
-/*
- * Premium Hair Studio — warm, editorial design system.
- * Alle kleuren, fonts en spacing komen uit deze tokens.
- */
-
 @theme inline {
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 4px;
-  --radius-xl: 6px;
-  --radius-2xl: 8px;
-
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
-
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
@@ -38,110 +31,50 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-sidebar: var(--surface);
-  --color-sidebar-foreground: var(--foreground);
-  --color-sidebar-primary: var(--primary);
-  --color-sidebar-primary-foreground: var(--primary-foreground);
-  --color-sidebar-accent: var(--surface);
-  --color-sidebar-accent-foreground: var(--foreground);
-  --color-sidebar-border: var(--border);
-  --color-sidebar-ring: var(--ring);
 }
 
 :root {
   --radius: 4px;
-
-  --background: #f7f1ea;
-  --foreground: #2a1f1a;
-  --surface: #efe5da;
-  --card: #fdfaf6;
-  --card-foreground: #2a1f1a;
-  --popover: #fdfaf6;
-  --popover-foreground: #2a1f1a;
-  --primary: #b5654a;
-  --primary-foreground: #fdfaf6;
-  --primary-hover: #94503a;
-  --secondary: #efe5da;
-  --secondary-foreground: #2a1f1a;
-  --muted: #efe5da;
-  --muted-foreground: #7a6a5f;
-  --accent: #b5654a;
-  --accent-foreground: #fdfaf6;
-  --destructive: #a13b28;
-  --destructive-foreground: #fdfaf6;
-  --border: #e2d5c7;
-  --input: #e2d5c7;
-  --ring: #b5654a;
+  --background: #0f1a26;
+  --foreground: #f3ebdd;
+  --surface: #172434;
+  --card: #13202d;
+  --card-foreground: #f3ebdd;
+  --popover: #172434;
+  --popover-foreground: #f3ebdd;
+  --primary: #c9a45c;
+  --primary-foreground: #0f1a26;
+  --primary-hover: #b58f49;
+  --secondary: #172434;
+  --secondary-foreground: #f3ebdd;
+  --muted: #172434;
+  --muted-foreground: #a7afb8;
+  --accent: #c9a45c;
+  --accent-foreground: #0f1a26;
+  --destructive: #e58c7a;
+  --destructive-foreground: #0f1a26;
+  --border: #2a3b50;
+  --input: #2a3b50;
+  --ring: #c9a45c;
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
-  }
-
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-display);
-    font-weight: 300;
-    letter-spacing: -0.01em;
-    line-height: 1.08;
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 3px;
-  }
-
-  ::selection {
-    background-color: var(--color-primary);
-    color: var(--color-primary-foreground);
-  }
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 450; letter-spacing: 0; line-height: 1.05; }
+  :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+  ::selection { background-color: var(--color-primary); color: var(--color-primary-foreground); }
 }
 
-/* Kleine hoofdletter-labels in accentkleur */
-@utility eyebrow {
-  font-size: 0.6875rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-/* Fade-up animatie bij scrollen */
+@utility eyebrow { font-size: 0.6875rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; }
 @utility reveal {
   opacity: 0;
   transform: translateY(18px);
-  transition:
-    opacity 0.7s ease-out,
-    transform 0.7s ease-out;
-
-  &[data-visible="true"] {
-    opacity: 1;
-    transform: none;
-  }
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  &[data-visible="true"] { opacity: 1; transform: none; }
 }
-
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
 }
