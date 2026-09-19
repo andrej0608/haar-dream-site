@@ -7,12 +7,12 @@ import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import { useLanguage, type Language } from "@/lib/i18n";
 
-function LanguageSwitch() {
+function LanguageSwitch({ compact = false }: { compact?: boolean }) {
   const { language, setLanguage } = useLanguage();
   return (
     <div className="flex items-center border border-border" aria-label="Language / Taal">
       {(["nl", "en"] as Language[]).map((item) => (
-        <button key={item} type="button" onClick={() => setLanguage(item)} aria-pressed={language === item} className={cn("h-9 px-3 text-xs font-medium uppercase transition-colors", language === item ? "bg-foreground text-background" : "bg-background text-muted-foreground hover:text-foreground")}>{item}</button>
+        <button key={item} type="button" onClick={() => setLanguage(item)} aria-pressed={language === item} className={cn("h-9 text-xs font-medium uppercase transition-colors", compact ? "px-2" : "px-3", language === item ? "bg-foreground text-background" : "bg-background text-muted-foreground hover:text-foreground")}>{item}</button>
       ))}
     </div>
   );
@@ -66,16 +66,19 @@ export function Navbar() {
           <Button onClick={() => go("#afspraak")}>{c.nav.book}</Button>
         </nav>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="mobiel-menu"
-          aria-label={open ? c.nav.close : c.nav.open}
-          className="flex h-11 w-11 items-center justify-center rounded-md border border-border text-foreground lg:hidden"
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitch compact />
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobiel-menu"
+            aria-label={open ? c.nav.close : c.nav.open}
+            className="flex h-11 w-11 items-center justify-center rounded-md border border-border text-foreground"
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
 
       {open ? (
@@ -94,7 +97,7 @@ export function Navbar() {
                 </li>
               ))}
             </ul>
-            <div className="mt-6 flex items-center justify-between gap-4"><LanguageSwitch /><Button className="flex-1" size="lg" onClick={() => go("#afspraak")}>{c.nav.book}</Button></div>
+            <Button className="mt-6 w-full" size="lg" onClick={() => go("#afspraak")}>{c.nav.book}</Button>
           </nav>
         </div>
       ) : null}

@@ -17,7 +17,7 @@ export function Footer() {
             </p>
           </div>
 
-          <nav aria-label="Navigatie in de voettekst">
+          <nav aria-label={c.footer.navigation}>
              <p className="eyebrow text-muted-foreground">{c.footer.navigation}</p>
             <ul className="mt-4 space-y-2">
                {navLinks.map((link, index) => (
