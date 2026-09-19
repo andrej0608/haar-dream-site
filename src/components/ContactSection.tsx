@@ -12,21 +12,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { openingHours, site } from "@/config/site";
+import { useLanguage } from "@/lib/i18n";
 
-const schema = z.object({
-  naam: z.string().min(2, "Vul je naam in."),
-  email: z.string().min(1, "Vul je e-mailadres in.").email("Vul een geldig e-mailadres in."),
-  bericht: z.string().min(10, "Je vraag mag iets uitgebreider zijn (minstens 10 tekens)."),
-  privacy: z.literal(true, {
-    errorMap: () => ({ message: "Je moet akkoord gaan met de verwerking van je gegevens." }),
-  }),
-});
-
-type FormValues = z.infer<typeof schema>;
+type FormValues = { naam: string; email: string; bericht: string; privacy: true };
 
 const errorText = "text-xs text-destructive";
 
 export function ContactSection() {
+  const { content: c } = useLanguage();
+  const schema = z.object({
+    naam: z.string().min(2, c.contact.errors.name),
+    email: z.string().min(1, c.contact.errors.emailRequired).email(c.contact.errors.emailInvalid),
+    bericht: z.string().min(10, c.contact.errors.message),
+    privacy: z.literal(true, { errorMap: () => ({ message: c.contact.errors.privacy }) }),
+  });
   const {
     register,
     handleSubmit,
@@ -43,7 +42,7 @@ export function ContactSection() {
 
   const onSubmit = (_values: FormValues) => {
     // Demo-website: er wordt niets verstuurd of opgeslagen.
-    toast.success("Bedankt! We nemen zo snel mogelijk contact met je op.");
+    toast.success(c.contact.success);
     reset({ naam: "", email: "", bericht: "" });
   };
 
@@ -51,29 +50,29 @@ export function ContactSection() {
     <section id="contact" className="border-t border-border py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Contact"
-          title="Openingsuren & contact"
-          subtitle="Een vraag over een behandeling of prijs? Stuur ons gerust een bericht."
+          eyebrow={c.contact.eyebrow}
+          title={c.contact.title}
+          subtitle={c.contact.subtitle}
         />
 
         <div className="mt-14 grid gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <h3 className="font-display text-2xl text-foreground">Openingsuren</h3>
+            <h3 className="font-display text-2xl text-foreground">{c.contact.hours}</h3>
             <ul className="mt-5 border-t border-border">
-              {openingHours.map((entry) => (
+              {openingHours.map((entry, index) => (
                 <li
                   key={entry.day}
                   className="flex items-center justify-between border-b border-border py-3 text-sm"
                 >
-                  <span className="text-foreground">{entry.day}</span>
+                  <span className="text-foreground">{c.contact.days[index]}</span>
                   <span className={entry.closed ? "text-muted-foreground" : "text-foreground"}>
-                    {entry.hours}
+                    {entry.closed ? c.contact.closed : entry.hours}
                   </span>
                 </li>
               ))}
             </ul>
 
-            <h3 className="mt-12 font-display text-2xl text-foreground">Waar je ons vindt</h3>
+            <h3 className="mt-12 font-display text-2xl text-foreground">{c.contact.location}</h3>
             <ul className="mt-5 space-y-4 text-sm">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
@@ -97,7 +96,7 @@ export function ContactSection() {
               </li>
             </ul>
             <p className="mt-6 text-xs text-muted-foreground">
-              Dit is een demo-website. Adres, telefoonnummer en e-mailadres zijn voorbeelden.
+              {c.contact.demo}
             </p>
           </Reveal>
 
@@ -107,23 +106,23 @@ export function ContactSection() {
               noValidate
               className="rounded-md border border-border bg-card p-6 sm:p-8"
             >
-              <h3 className="font-display text-2xl text-foreground">Stel je vraag</h3>
+              <h3 className="font-display text-2xl text-foreground">{c.contact.formTitle}</h3>
 
               <div className="mt-6 space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="naam">Naam</Label>
+                  <Label htmlFor="naam">{c.contact.name}</Label>
                   <Input id="naam" autoComplete="name" {...register("naam")} />
                   {errors.naam ? <p className={errorText}>{errors.naam.message}</p> : null}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">E-mail</Label>
+                  <Label htmlFor="email">{c.contact.email}</Label>
                   <Input id="email" type="email" autoComplete="email" {...register("email")} />
                   {errors.email ? <p className={errorText}>{errors.email.message}</p> : null}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="bericht">Bericht</Label>
+                  <Label htmlFor="bericht">{c.contact.message}</Label>
                   <Textarea id="bericht" rows={5} {...register("bericht")} />
                   {errors.bericht ? <p className={errorText}>{errors.bericht.message}</p> : null}
                 </div>
@@ -138,14 +137,14 @@ export function ContactSection() {
                       }
                     />
                     <Label htmlFor="privacy" className="text-sm font-normal leading-relaxed text-muted-foreground">
-                      Ik ga akkoord met de verwerking van mijn gegevens.
+                      {c.contact.privacy}
                     </Label>
                   </div>
                   {errors.privacy ? <p className={errorText}>{errors.privacy.message}</p> : null}
                 </div>
 
                 <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                  Verstuur vraag
+                  {c.contact.submit}
                 </Button>
               </div>
             </form>
