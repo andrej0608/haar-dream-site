@@ -11,7 +11,6 @@ export const site = {
     street: "Grote Markt 1",
     city: "1000 Brussel",
     country: "België",
-    mapQuery: "Grand-Place 1, 1000 Bruxelles, Belgium",
   },
   socials: {
     instagram: "#",
