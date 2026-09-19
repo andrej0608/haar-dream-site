@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nlBE } from "date-fns/locale";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Reveal } from "@/components/Reveal";
@@ -107,5 +107,5 @@ function DateStep({ date, time, groups, setDate, setTime }: { date: Date | undef
 }
 
 function Stepper({ current }: { current: number }) { return <ol className="grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-4">{steps.map((label, index) => <li key={label} aria-current={index === current ? "step" : undefined} className={cn("flex items-center gap-3 bg-background px-4 py-4 text-sm", index === current && "bg-primary text-primary-foreground")}><span className={cn("flex size-6 shrink-0 items-center justify-center rounded-full border text-xs", index < current ? "border-primary bg-primary text-primary-foreground" : index === current ? "border-primary-foreground/50" : "border-border text-muted-foreground")}>{index < current ? <Check className="size-3" /> : index + 1}</span><span className={cn(index > current && "text-muted-foreground")}>{label}</span></li>)}</ol>; }
-function Summary({ label, value }: { label: string; value?: string }) { return <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 last:border-0 last:pb-0"><dt className="text-muted-foreground">{label}</dt><dd className={cn("text-right", value ? "text-foreground" : "text-muted-foreground/60")}>{value ?? "—"}</dd></div>; }
-function Field({ label, id, error, children }: { label: string; id: string; error?: string; children: React.ReactNode }) { return <div className="space-y-2"><Label htmlFor={id}>{label}</Label>{children}{error ? <p className={errorText}>{error}</p> : null}</div>; }
+function Summary({ label, value }: { label: string; value: string | undefined }) { return <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3 last:border-0 last:pb-0"><dt className="text-muted-foreground">{label}</dt><dd className={cn("text-right", value ? "text-foreground" : "text-muted-foreground/60")}>{value ?? "—"}</dd></div>; }
+function Field({ label, id, error, children }: { label: string; id: string; error: string | undefined; children: ReactNode }) { return <div className="space-y-2"><Label htmlFor={id}>{label}</Label>{children}{error ? <p className={errorText}>{error}</p> : null}</div>; }
