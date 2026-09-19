@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,6 +20,8 @@ const errorText = "text-xs text-destructive";
 
 export function ContactSection() {
   const { content: c } = useLanguage();
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(site.address.mapQuery)}&z=15&output=embed`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address.mapQuery)}`;
   const schema = z.object({
     naam: z.string().min(2, c.contact.errors.name),
     email: z.string().min(1, c.contact.errors.emailRequired).email(c.contact.errors.emailInvalid),
@@ -98,6 +100,28 @@ export function ContactSection() {
             <p className="mt-6 text-xs text-muted-foreground">
               {c.contact.demo}
             </p>
+
+            <div className="mt-10">
+              <div className="flex items-end justify-between gap-4">
+                <h3 className="font-display text-2xl text-foreground">{c.contact.mapTitle}</h3>
+                <Button asChild variant="outline" size="sm">
+                  <a href={directionsUrl} target="_blank" rel="noreferrer">
+                    {c.contact.directions}
+                    <ExternalLink aria-hidden="true" />
+                  </a>
+                </Button>
+              </div>
+              <div className="mt-5 aspect-[4/3] overflow-hidden rounded-md border border-border bg-surface">
+                <iframe
+                  title={c.contact.mapAria}
+                  src={mapUrl}
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            </div>
           </Reveal>
 
           <Reveal delay={80}>
