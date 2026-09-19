@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { nlBE } from "date-fns/locale";
+import { enGB, nlBE } from "date-fns/locale";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,25 +15,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { formattedPrice, services, stylists, type Service } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /* Visuele demo: er wordt niets opgeslagen of verstuurd.               */
 /* ------------------------------------------------------------------ */
 
-const steps = ["Behandeling", "Datum & uur", "Gegevens", "Bevestiging"] as const;
-
-const detailsSchema = z.object({
-  voornaam: z.string().min(2, "Vul je voornaam in."),
-  achternaam: z.string().min(2, "Vul je achternaam in."),
-  email: z.string().min(1, "Vul je e-mailadres in.").email("Vul een geldig e-mailadres in."),
-  telefoon: z.string().min(6, "Vul een geldig telefoonnummer in."),
-  opmerking: z.string().optional(),
-  privacy: z.literal(true, {
-    errorMap: () => ({ message: "Je moet akkoord gaan met de verwerking van je gegevens." }),
-  }),
-});
-
-type DetailsValues = z.infer<typeof detailsSchema>;
+type DetailsValues = { voornaam: string; achternaam: string; email: string; telefoon: string; opmerking?: string; privacy: true };
 
 const errorText = "text-xs text-destructive";
 
@@ -84,8 +72,8 @@ const startOfToday = () => {
 
 const isClosedDay = (date: Date) => openingWindows[date.getDay()] === null;
 
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("nl-BE", {
+const formatDate = (date: Date, language: "nl" | "en") =>
+  date.toLocaleDateString(language === "nl" ? "nl-BE" : "en-GB", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -93,6 +81,7 @@ const formatDate = (date: Date) =>
   });
 
 export function BookingSection() {
+  const { content: c, language } = useLanguage();
   const [step, setStep] = useState(0);
   const [service, setService] = useState<Service | null>(null);
   const [stylist, setStylist] = useState<string>(stylists[0]);
@@ -102,6 +91,14 @@ export function BookingSection() {
 
   const slots = useMemo(() => (date ? buildSlots(date) : []), [date]);
 
+  const detailsSchema = z.object({
+    voornaam: z.string().min(2, c.booking.errors.firstName),
+    achternaam: z.string().min(2, c.booking.errors.lastName),
+    email: z.string().min(1, c.booking.errors.emailRequired).email(c.booking.errors.emailInvalid),
+    telefoon: z.string().min(6, c.booking.errors.phone),
+    opmerking: z.string().optional(),
+    privacy: z.literal(true, { errorMap: () => ({ message: c.booking.errors.privacy }) }),
+  });
   const form = useForm<DetailsValues>({
     resolver: zodResolver(detailsSchema),
     defaultValues: { voornaam: "", achternaam: "", email: "", telefoon: "", opmerking: "" },
@@ -135,12 +132,12 @@ export function BookingSection() {
 
   const summary = (
     <dl className="space-y-4 text-sm">
-      <SummaryRow label="Behandeling" value={service?.name} />
-      <SummaryRow label="Duur" value={service ? `${service.duration} min` : undefined} />
-      <SummaryRow label="Kapper" value={stylist} />
-      <SummaryRow label="Datum" value={date ? formatDate(date) : undefined} />
-      <SummaryRow label="Uur" value={time ?? undefined} />
-      <SummaryRow label="Prijs" value={service ? formattedPrice(service.price) : undefined} />
+       <SummaryRow label={c.booking.labels[0]} value={service ? c.services.items[service.id][0] : undefined} />
+       <SummaryRow label={c.booking.labels[1]} value={service ? `${service.duration} min` : undefined} />
+       <SummaryRow label={c.booking.labels[2]} value={stylist === stylists[0] ? c.booking.noPreference : stylist} />
+       <SummaryRow label={c.booking.labels[3]} value={date ? formatDate(date, language) : undefined} />
+       <SummaryRow label={c.booking.labels[4]} value={time ?? undefined} />
+       <SummaryRow label={c.booking.labels[5]} value={service ? `${c.services.from} €${service.price}` : undefined} />
     </dl>
   );
 
@@ -148,14 +145,14 @@ export function BookingSection() {
     <section id="afspraak" className="border-t border-border py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHeading
-          eyebrow="Afspraak maken"
-          title="Boek jouw afspraak"
-          subtitle="Kies je behandeling, dag en uur. Je ontvangt een bevestiging per e-mail."
+          eyebrow={c.booking.eyebrow}
+          title={c.booking.title}
+          subtitle={c.booking.subtitle}
         />
 
         <Reveal className="mt-14">
           <div className="rounded-md border border-border bg-card p-6 sm:p-8">
-            <Stepper current={step} />
+            <Stepper current={step} labels={c.booking.steps} />
 
             <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
               <div>
@@ -165,6 +162,7 @@ export function BookingSection() {
                     onSelect={setService}
                     stylist={stylist}
                     onStylistChange={setStylist}
+                    labels={c}
                   />
                 ) : null}
 
@@ -178,6 +176,8 @@ export function BookingSection() {
                       setTime(null);
                     }}
                     onTimeChange={setTime}
+                    labels={c}
+                    language={language}
                   />
                 ) : null}
 
@@ -191,29 +191,29 @@ export function BookingSection() {
                     className="grid gap-5 sm:grid-cols-2"
                   >
                     <div className="space-y-2">
-                      <Label htmlFor="b-voornaam">Voornaam</Label>
+                       <Label htmlFor="b-voornaam">{c.booking.firstName}</Label>
                       <Input id="b-voornaam" autoComplete="given-name" {...form.register("voornaam")} />
                       {errors.voornaam ? <p className={errorText}>{errors.voornaam.message}</p> : null}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="b-achternaam">Achternaam</Label>
+                       <Label htmlFor="b-achternaam">{c.booking.lastName}</Label>
                       <Input id="b-achternaam" autoComplete="family-name" {...form.register("achternaam")} />
                       {errors.achternaam ? (
                         <p className={errorText}>{errors.achternaam.message}</p>
                       ) : null}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="b-email">E-mail</Label>
+                       <Label htmlFor="b-email">{c.booking.email}</Label>
                       <Input id="b-email" type="email" autoComplete="email" {...form.register("email")} />
                       {errors.email ? <p className={errorText}>{errors.email.message}</p> : null}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="b-telefoon">Telefoon</Label>
+                       <Label htmlFor="b-telefoon">{c.booking.phone}</Label>
                       <Input id="b-telefoon" type="tel" autoComplete="tel" {...form.register("telefoon")} />
                       {errors.telefoon ? <p className={errorText}>{errors.telefoon.message}</p> : null}
                     </div>
                     <div className="space-y-2 sm:col-span-2">
-                      <Label htmlFor="b-opmerking">Opmerking (optioneel)</Label>
+                       <Label htmlFor="b-opmerking">{c.booking.note}</Label>
                       <Textarea id="b-opmerking" rows={4} {...form.register("opmerking")} />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
@@ -231,7 +231,7 @@ export function BookingSection() {
                           htmlFor="b-privacy"
                           className="text-sm font-normal leading-relaxed text-muted-foreground"
                         >
-                          Ik ga akkoord met de verwerking van mijn gegevens.
+                           {c.booking.privacy}
                         </Label>
                       </div>
                       {errors.privacy ? <p className={errorText}>{errors.privacy.message}</p> : null}
@@ -245,11 +245,10 @@ export function BookingSection() {
                       <Check className="size-5" aria-hidden="true" />
                     </div>
                     <h3 className="mt-6 font-display text-3xl text-foreground">
-                      Je afspraak staat vast
+                       {c.booking.confirmedTitle}
                     </h3>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                      Bedankt{details ? `, ${details.voornaam}` : ""}! Je afspraak is genomen. Je
-                      ontvangt een bevestiging per e-mail.
+                       {c.booking.thanks}{details ? `, ${details.voornaam}` : ""}! {c.booking.confirmedText}
                     </p>
                     <div className="mt-8 border-t border-border pt-6">{summary}</div>
                   </div>
@@ -259,11 +258,11 @@ export function BookingSection() {
               {/* Samenvatting: sticky op desktop */}
               {step < 3 ? (
                 <aside
-                  aria-label="Samenvatting van je keuzes"
+                   aria-label={c.booking.summaryAria}
                   className="hidden lg:sticky lg:top-28 lg:block lg:self-start"
                 >
                   <div className="rounded-md border border-border bg-background p-6">
-                    <p className="eyebrow text-primary">Jouw keuze</p>
+                     <p className="eyebrow text-primary">{c.booking.choice}</p>
                     <div className="mt-5">{summary}</div>
                   </div>
                 </aside>
@@ -274,8 +273,8 @@ export function BookingSection() {
               <div className="mt-10 border-t border-border pt-6">
                 {/* Compacte samenvatting op mobiel */}
                 <p className="mb-4 text-xs text-muted-foreground lg:hidden">
-                  {service ? service.name : "Nog geen behandeling"}
-                  {date ? ` · ${formatDate(date)}` : ""}
+                   {service ? c.services.items[service.id][0] : c.booking.noTreatment}
+                   {date ? ` · ${formatDate(date, language)}` : ""}
                   {time ? ` · ${time}` : ""}
                 </p>
                 <div className="flex gap-3">
@@ -286,10 +285,10 @@ export function BookingSection() {
                     disabled={step === 0}
                   >
                     <ChevronLeft aria-hidden="true" />
-                    Vorige
+                     {c.booking.previous}
                   </Button>
                   <Button type="button" onClick={handleNext} disabled={!canContinue}>
-                    Volgende
+                     {c.booking.next}
                     <ChevronRight aria-hidden="true" />
                   </Button>
                 </div>
@@ -297,7 +296,7 @@ export function BookingSection() {
             ) : (
               <div className="mt-10 border-t border-border pt-6">
                 <Button type="button" onClick={reset}>
-                  Nieuwe afspraak
+                   {c.booking.newBooking}
                 </Button>
               </div>
             )}
@@ -319,10 +318,10 @@ function SummaryRow({ label, value }: { label: string; value?: string | undefine
   );
 }
 
-function Stepper({ current }: { current: number }) {
+function Stepper({ current, labels }: { current: number; labels: readonly string[] }) {
   return (
     <ol className="grid gap-px overflow-hidden rounded-md border border-border bg-border sm:grid-cols-4">
-      {steps.map((label, index) => {
+       {labels.map((label, index) => {
         const state = index === current ? "current" : index < current ? "done" : "todo";
         return (
           <li
@@ -358,15 +357,17 @@ function ServiceStep({
   onSelect,
   stylist,
   onStylistChange,
+  labels,
 }: {
   service: Service | null;
   onSelect: (service: Service) => void;
   stylist: string;
   onStylistChange: (value: string) => void;
+  labels: ReturnType<typeof useLanguage>["content"];
 }) {
   return (
     <div>
-      <h3 className="font-display text-2xl text-foreground">Kies je behandeling</h3>
+       <h3 className="font-display text-2xl text-foreground">{labels.booking.chooseTreatment}</h3>
       <ul className="mt-6 grid gap-3 sm:grid-cols-2">
         {services.map((item) => {
           const selected = service?.id === item.id;
@@ -383,10 +384,10 @@ function ServiceStep({
                     : "border-border bg-background hover:border-primary/50",
                 )}
               >
-                <span className="font-display text-xl text-foreground">{item.name}</span>
+                 <span className="font-display text-xl text-foreground">{labels.services.items[item.id][0]}</span>
                 <span className="text-xs text-muted-foreground">{item.duration} min</span>
                 <span className="mt-2 text-sm font-medium text-primary">
-                  {formattedPrice(item.price)}
+                   {labels.services.from} €{item.price}
                 </span>
               </button>
             </li>
@@ -395,17 +396,17 @@ function ServiceStep({
       </ul>
 
       <div className="mt-8 max-w-sm space-y-2">
-        <Label htmlFor="kapper">Kapper</Label>
+         <Label htmlFor="kapper">{labels.booking.stylist}</Label>
         <select
           id="kapper"
           value={stylist}
           onChange={(event) => onStylistChange(event.target.value)}
-          aria-label="Kies een kapper"
+           aria-label={labels.booking.chooseStylist}
           className="h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
         >
           {stylists.map((name) => (
             <option key={name} value={name}>
-              {name}
+               {name === stylists[0] ? labels.booking.noPreference : name}
             </option>
           ))}
         </select>
@@ -420,35 +421,39 @@ function DateStep({
   time,
   onDateChange,
   onTimeChange,
+  labels,
+  language,
 }: {
   date: Date | undefined;
   slots: { time: string; available: boolean }[];
   time: string | null;
   onDateChange: (date: Date | undefined) => void;
   onTimeChange: (time: string) => void;
+  labels: ReturnType<typeof useLanguage>["content"];
+  language: "nl" | "en";
 }) {
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <div>
-        <h3 className="font-display text-2xl text-foreground">Kies een dag</h3>
+         <h3 className="font-display text-2xl text-foreground">{labels.booking.chooseDay}</h3>
         <div className="mt-6 inline-block rounded-md border border-border bg-background">
           <Calendar
             mode="single"
             selected={date}
             onSelect={onDateChange}
             disabled={(day) => day < startOfToday() || isClosedDay(day)}
-            locale={nlBE}
+             locale={language === "nl" ? nlBE : enGB}
             weekStartsOn={1}
             className="bg-transparent"
           />
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Op maandag en zondag zijn we gesloten.
+           {labels.booking.closed}
         </p>
       </div>
 
       <div>
-        <h3 className="font-display text-2xl text-foreground">Kies een uur</h3>
+         <h3 className="font-display text-2xl text-foreground">{labels.booking.chooseTime}</h3>
         {date ? (
           <ul className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-3">
             {slots.map((slot) => {
@@ -459,7 +464,7 @@ function DateStep({
                     type="button"
                     disabled={!slot.available}
                     onClick={() => onTimeChange(slot.time)}
-                    aria-label={`${slot.time}${slot.available ? "" : " — niet beschikbaar"}`}
+                     aria-label={`${slot.time}${slot.available ? "" : ` — ${labels.booking.unavailable}`}`}
                     aria-pressed={selected}
                     className={cn(
                       "h-10 w-full rounded-md border text-sm transition-colors",
@@ -476,7 +481,7 @@ function DateStep({
           </ul>
         ) : (
           <p className="mt-6 text-sm text-muted-foreground">
-            Kies eerst een dag om de vrije uren te zien.
+             {labels.booking.chooseDayFirst}
           </p>
         )}
       </div>
