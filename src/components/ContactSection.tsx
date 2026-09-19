@@ -20,10 +20,7 @@ const errorText = "text-xs text-destructive";
 
 export function ContactSection() {
   const { content: c } = useLanguage();
-  const mapKey = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY"];
-  const mapUrl = mapKey
-    ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(mapKey)}&q=${encodeURIComponent(site.address.mapQuery)}&zoom=15`
-    : null;
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(site.address.mapQuery)}&z=15&output=embed`;
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address.mapQuery)}`;
   const schema = z.object({
     naam: z.string().min(2, c.contact.errors.name),
@@ -115,20 +112,14 @@ export function ContactSection() {
                 </Button>
               </div>
               <div className="mt-5 aspect-[4/3] overflow-hidden rounded-md border border-border bg-surface">
-                {mapUrl ? (
-                  <iframe
-                    title={c.contact.mapAria}
-                    src={mapUrl}
-                    className="h-full w-full border-0"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center p-8 text-center text-sm text-muted-foreground">
-                    {site.address.street}, {site.address.city}
-                  </div>
-                )}
+                <iframe
+                  title={c.contact.mapAria}
+                  src={mapUrl}
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
               </div>
             </div>
           </Reveal>
