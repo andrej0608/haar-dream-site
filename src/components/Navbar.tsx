@@ -5,8 +5,21 @@ import { Button } from "@/components/ui/button";
 import { navLinks, site } from "@/config/site";
 import { scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
+import { useLanguage, type Language } from "@/lib/i18n";
+
+function LanguageSwitch() {
+  const { language, setLanguage } = useLanguage();
+  return (
+    <div className="flex items-center border border-border" aria-label="Language / Taal">
+      {(["nl", "en"] as Language[]).map((item) => (
+        <button key={item} type="button" onClick={() => setLanguage(item)} aria-pressed={language === item} className={cn("h-9 px-3 text-xs font-medium uppercase transition-colors", language === item ? "bg-foreground text-background" : "bg-background text-muted-foreground hover:text-foreground")}>{item}</button>
+      ))}
+    </div>
+  );
+}
 
 export function Navbar() {
+  const { content: c } = useLanguage();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -38,18 +51,19 @@ export function Navbar() {
           {site.name}
         </button>
 
-        <nav aria-label="Hoofdnavigatie" className="hidden items-center gap-8 lg:flex">
-          {navLinks.map((link) => (
+        <nav aria-label={c.nav.aria} className="hidden items-center gap-6 lg:flex">
+          {navLinks.map((link, index) => (
             <button
               key={link.href}
               type="button"
               onClick={() => go(link.href)}
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              {link.label}
+              {c.nav.links[index]}
             </button>
           ))}
-          <Button onClick={() => go("#afspraak")}>Boek een afspraak</Button>
+          <LanguageSwitch />
+          <Button onClick={() => go("#afspraak")}>{c.nav.book}</Button>
         </nav>
 
         <button
@@ -57,7 +71,7 @@ export function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobiel-menu"
-          aria-label={open ? "Menu sluiten" : "Menu openen"}
+          aria-label={open ? c.nav.close : c.nav.open}
           className="flex h-11 w-11 items-center justify-center rounded-md border border-border text-foreground lg:hidden"
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -66,23 +80,21 @@ export function Navbar() {
 
       {open ? (
         <div id="mobiel-menu" className="border-t border-border bg-background lg:hidden">
-          <nav aria-label="Mobiele navigatie" className="mx-auto max-w-6xl px-5 py-6 sm:px-8">
+          <nav aria-label={c.nav.mobileAria} className="mx-auto max-w-6xl px-5 py-6 sm:px-8">
             <ul className="flex flex-col">
-              {navLinks.map((link) => (
+              {navLinks.map((link, index) => (
                 <li key={link.href}>
                   <button
                     type="button"
                     onClick={() => go(link.href)}
                     className="w-full border-b border-border py-4 text-left font-display text-xl text-foreground"
                   >
-                    {link.label}
+                    {c.nav.links[index]}
                   </button>
                 </li>
               ))}
             </ul>
-            <Button className="mt-6 w-full" size="lg" onClick={() => go("#afspraak")}>
-              Boek een afspraak
-            </Button>
+            <div className="mt-6 flex items-center justify-between gap-4"><LanguageSwitch /><Button className="flex-1" size="lg" onClick={() => go("#afspraak")}>{c.nav.book}</Button></div>
           </nav>
         </div>
       ) : null}
