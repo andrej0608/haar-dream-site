@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { formattedPrice, services, stylists, type Service } from "@/config/site";
+import { services, stylists, type Service } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n";
 
@@ -21,7 +21,7 @@ import { useLanguage } from "@/lib/i18n";
 /* Visuele demo: er wordt niets opgeslagen of verstuurd.               */
 /* ------------------------------------------------------------------ */
 
-type DetailsValues = { voornaam: string; achternaam: string; email: string; telefoon: string; opmerking?: string; privacy: true };
+type DetailsValues = { voornaam: string; achternaam: string; email: string; telefoon: string; opmerking: string; privacy: true };
 
 const errorText = "text-xs text-destructive";
 
@@ -96,7 +96,7 @@ export function BookingSection() {
     achternaam: z.string().min(2, c.booking.errors.lastName),
     email: z.string().min(1, c.booking.errors.emailRequired).email(c.booking.errors.emailInvalid),
     telefoon: z.string().min(6, c.booking.errors.phone),
-    opmerking: z.string().optional(),
+    opmerking: z.string(),
     privacy: z.literal(true, { errorMap: () => ({ message: c.booking.errors.privacy }) }),
   });
   const form = useForm<DetailsValues>({
