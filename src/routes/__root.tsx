@@ -10,6 +10,7 @@ import {
 import type { ReactNode } from "react";
 
 import { Toaster } from "../components/ui/sonner";
+import { LanguageProvider } from "../i18n/LanguageProvider";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -122,8 +123,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster position="top-center" />
+      <LanguageProvider>
+        <Outlet />
+        <Toaster position="top-center" />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
