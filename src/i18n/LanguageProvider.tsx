@@ -18,12 +18,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
   useLayoutEffect(() => {
     if (pendingScrollPosition.current === null) return;
+    const scrollPosition = pendingScrollPosition.current;
     const root = document.documentElement;
     const previousScrollBehavior = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
-    window.scrollTo(0, pendingScrollPosition.current);
-    root.style.scrollBehavior = previousScrollBehavior;
+    window.scrollTo(0, scrollPosition);
+    const frame = window.requestAnimationFrame(() => {
+      window.scrollTo(0, scrollPosition);
+      root.style.scrollBehavior = previousScrollBehavior;
+    });
     pendingScrollPosition.current = null;
+    return () => window.cancelAnimationFrame(frame);
   }, [language]);
   useEffect(() => {
     document.documentElement.lang = language;
