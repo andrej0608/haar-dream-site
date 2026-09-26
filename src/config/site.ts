@@ -23,11 +23,11 @@ export const openingHours = [
 ] as const;
 
 export const navLinks = [
-  { label: "Menu", href: "#menu" },
-  { label: "Over ons", href: "#over-ons" },
-  { label: "Galerij", href: "#galerij" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "Contact", href: "#contact" },
+  { label: "Menu", href: "#menu", key: "menu" },
+  { label: "Over ons", href: "#over-ons", key: "about" },
+  { label: "Galerij", href: "#galerij", key: "gallery" },
+  { label: "Reviews", href: "#reviews", key: "reviews" },
+  { label: "Contact", href: "#contact", key: "contact" },
 ] as const;
 
 export const menu = {
