@@ -18,7 +18,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
   useLayoutEffect(() => {
     if (pendingScrollPosition.current === null) return;
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
     window.scrollTo(0, pendingScrollPosition.current);
+    root.style.scrollBehavior = previousScrollBehavior;
     pendingScrollPosition.current = null;
   }, [language]);
   useEffect(() => {
