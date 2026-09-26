@@ -20,7 +20,7 @@ export function ServicesSection() {
             {t.categories.map((category, index) => <button key={index} type="button" role="tab" aria-selected={active === index} onClick={() => setActive(index)} className={cn("shrink-0 border-b-2 px-5 py-4 text-sm font-semibold transition-colors", active === index ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground")}>{category.label}</button>)}
           </div>
           <ul className="divide-y divide-border border-b border-border">
-            {t.categories[active].dishes.map((dish, index) => <li key={index} className="grid grid-cols-[1fr_auto] gap-5 py-6"><div><h3 className="font-display text-xl text-foreground sm:text-2xl">{dish.name}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{dish.description}</p></div><p className="pt-1 text-sm font-semibold text-primary">€{prices[active][index]}</p></li>)}
+            {t.categories[active]?.dishes.map((dish, index) => <li key={index} className="grid grid-cols-[1fr_auto] gap-5 py-6"><div><h3 className="font-display text-xl text-foreground sm:text-2xl">{dish.name}</h3><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{dish.description}</p></div><p className="pt-1 text-sm font-semibold text-primary">€{prices[active]?.[index]}</p></li>)}
           </ul>
           <p className="mt-6 text-xs text-muted-foreground">{t.note}</p>
         </Reveal>
